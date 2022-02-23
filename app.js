@@ -1,3 +1,14 @@
+const container = document.querySelector('#container');
+const result = document.querySelector('#result');
+const score = document.querySelector('#score');
+const btnContainer = document.querySelector('#btnContainer')
+const rockBtn = document.querySelector('#rockBtn');
+const paperBtn = document.querySelector('#paperBtn');
+const scissorBtn = document.querySelector('#scissorBtn');
+
+let playerWin = 0;
+let computerWin = 0;
+
 let computerSelection = computerPlay().toLowerCase();
 let playerSelection = '';
 
@@ -8,17 +19,16 @@ function computerPlay() {
 }
 
 function playRound(computerSelection, playerSelection) {
-    playerSelection.toLowerCase();
-
-        //running through possibilites
         if (playerSelection == "rock") {
             if (computerSelection == 'rock') {
                 return "Tie";
             }
             else if (computerSelection == 'paper') {
+                computerWin++;
                 return "You Lose";
             }
-            else if (computerSelection == 'scissors') {
+            else if (computerSelection == 'scissor') {
+                playerWin++;
                 return "You Win";
             }
         }
@@ -27,20 +37,24 @@ function playRound(computerSelection, playerSelection) {
                 return "Tie";
             }
             else if (computerSelection == 'rock') {
+                playerWin++;
                 return "You Win";
             }
-            else if (computerSelection == 'scissors') {
+            else if (computerSelection == 'scissor') {
+                computerWin++;
                 return "You Lose";
             }
         }
-        else if (playerSelection == 'scissors') {
-            if (computerSelection == 'scissors') {
+        else if (playerSelection == 'scissor') {
+            if (computerSelection == 'scissor') {
                 return "Tie";
             }
             else if (computerSelection == 'paper') {
+                playerWin++;
                 return "You Win";
             }
             else if (computerSelection == 'rock') {
+                computerWin++;
                 return "You Lose";
             }
         }
@@ -49,46 +63,21 @@ function playRound(computerSelection, playerSelection) {
         }
     }
 
-    //creating function to play a 5 round game
-    function game() {
-        //creating score keep variable counters
-        let playerWin = 0;
-        let computerWin = 0;
-
-        //looping in order to play 5 times
-        for (let i = 0; i < 5; i++) {
-            //prompting user for input + logging their choice
-            playerSelection = window.prompt("Your Choice Is: ");
-            console.log("You Chose: " + playerSelection);
-
-            console.log("Computer Chose: " + computerSelection);
-            //call playRound() + keep track of score
-            playRound(playerSelection,computerSelection);
-            //storing the score and updating it
-            if (playRound(playerSelection,computerSelection) == "You Win") {
-                playerWin++;
-                console.log("You Win");
-            }
-            else if (playRound(playerSelection,computerSelection) == "You Lose") {
-                computerWin++;
-                console.log("You Lose");
-            }
-            else if (playRound(playerSelection,computerSelection) == "Tie") {
-                playerWin++;
-                computerWin++;
-                console.log("Tie");
-            }
-            computerSelection = computerPlay().toLowerCase();
-        }
-        //final output 
-        if (playerWin > computerWin) {
-            console.log("Final Result: Win");
-        }
-        else if (playerWin < computerWin) {
-            console.log("Final Result: Lost");
-        }
-        else if (playerWin == computerWin) {
-            console.log("Final Result: Tie")
-        }
+function clickHandler(event) {
+    result.textContent = playRound(event.target.textContent.toLowerCase(), computerPlay());
+    score.textContent = `Player: ${playerWin} Computer: ${computerWin}`;
+    if (playerWin === 5 || computerWin === 5) {
+        rockBtn.removeEventListener('click', clickHandler);
+        paperBtn.removeEventListener('click', clickHandler);
+        scissorBtn.removeEventListener('click', clickHandler);
+        result.textContent = `${playerWin === 5 ? 'you' : 'computer'} Won!`
     }
-console.log(game());
+}
+
+rockBtn.addEventListener('click', clickHandler);
+paperBtn.addEventListener('click', clickHandler);
+scissorBtn.addEventListener('click', clickHandler);
+
+result.textContent = 'click on button';
+score.textContent = 'first 5 points!'
+
